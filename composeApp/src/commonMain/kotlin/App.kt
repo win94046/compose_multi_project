@@ -9,8 +9,6 @@ import domain.presentation.screen.HomeScreen
 @Composable
 @Preview
 fun App() {
-
-    initializeKoin()
     MaterialTheme {
 
         Navigator(HomeScreen())
