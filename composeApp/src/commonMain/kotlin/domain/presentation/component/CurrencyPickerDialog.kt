@@ -126,7 +126,14 @@ fun CurrencyPickerDialog(
                                 key = { it._id.toHexString() }
                             ) {currency ->
                                 CurrencyCodePickerView(
-                                    code = CurrencyCode.valueOf(currency.code),
+                                    code =
+                                    try {
+                                        CurrencyCode.valueOf(currency.code)
+                                    } catch (e: IllegalArgumentException) {
+                                        // 记录错误日志，或提供一个默认值
+                                        println("CurrencyPickerDialog Unknown currency code: ${currency.code}"+ e )
+                                        CurrencyCode.USD // 或其他默认值
+                                    },
                                     isSelected = selectedCurrencyCode.name == currency.code,
                                     onSelect = { selectedCurrencyCode = it }
                                 )

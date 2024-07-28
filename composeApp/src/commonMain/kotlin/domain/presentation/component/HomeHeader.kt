@@ -166,9 +166,13 @@ fun CurrencyInputs(
                 if (source.isSuccess()) {
                     onCurrencyTypeSelect(
                         CurrencyType.Source(
-                            currencyCode = CurrencyCode.valueOf(
-                                source.getSuccessData().code
-                            )
+                            currencyCode = try {
+                                CurrencyCode.valueOf(source.getSuccessData().code)
+                            } catch (e: IllegalArgumentException) {
+                                // 记录错误日志，或提供一个默认值
+                                println("CurrencyInputs Unknown source currency code: ${source.getSuccessData().code}  "+ e )
+                                CurrencyCode.USD // 或其他默认值
+                            }
                         )
                     )
                 }
@@ -200,9 +204,13 @@ fun CurrencyInputs(
                 if (target.isSuccess()) {
                     onCurrencyTypeSelect(
                         CurrencyType.Target(
-                            currencyCode = CurrencyCode.valueOf(
-                                target.getSuccessData().code
-                            )
+                            currencyCode = try {
+                                CurrencyCode.valueOf(target.getSuccessData().code)
+                            } catch (e: IllegalArgumentException) {
+                                // 记录错误日志，或提供一个默认值
+                                println("CurrencyInputs Unknown target currency code: ${target.getSuccessData().code}  "+ e )
+                                CurrencyCode.USD // 或其他默认值
+                            }
                         )
                     )
                 }
@@ -242,14 +250,26 @@ fun RowScope.CurrencyView(
                     Icon(
                         modifier = Modifier.size(24.dp),
                         painter = painterResource(
-                            CurrencyCode.valueOf(data.code).flag
+                            try {
+                                CurrencyCode.valueOf(data.code).flag
+                            } catch (e: IllegalArgumentException) {
+                                // 记录错误日志，或提供一个默认值
+                                println("CurrencyView , flag  Unknown currency code: ${data.code}  "+ e )
+                                CurrencyCode.USD.flag // 或其他默认值
+                            }
                         ),
                         tint = Color.Unspecified,
                         contentDescription = "Country Flag"
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = CurrencyCode.valueOf(data.code).name,
+                        text = try {
+                            CurrencyCode.valueOf(data.code).name
+                        } catch (e: IllegalArgumentException) {
+                            // 记录错误日志，或提供一个默认值
+                            println("CurrencyView , name Unknown currency code: ${data.code}  "+ e )
+                            CurrencyCode.USD.name // 或其他默认值
+                        },
                         fontWeight = FontWeight.Bold,
                         fontSize = MaterialTheme.typography.titleLarge.fontSize,
                         color = Color.White

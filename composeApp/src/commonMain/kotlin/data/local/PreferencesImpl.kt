@@ -75,13 +75,30 @@ class PreferencesImpl(
         return flowSettings.getStringFlow(
             key = SOURCE_CURRENCY_KEY,
             defaultValue = DEFAULT_SOURCE_CURRENCY
-        ).map { CurrencyCode.valueOf(it) }
+        ).map {
+            try {
+                CurrencyCode.valueOf(it)
+            } catch (e: IllegalArgumentException) {
+                // 记录错误日志，或提供一个默认值
+                println("PreferencesImpl , readSourceCurrencyCode Unknown currency code: ${it}  "+ e )
+                CurrencyCode.USD // 或其他默认值
+            }
+
+        }
     }
 
     override fun readTargetCurrencyCode(): Flow<CurrencyCode> {
         return flowSettings.getStringFlow(
             key = TARGET_CURRENCY_KEY,
             defaultValue = DEFAULT_TARGET_CURRENCY
-        ).map { CurrencyCode.valueOf(it) }
+        ).map {
+            try {
+                CurrencyCode.valueOf(it)
+            } catch (e: IllegalArgumentException) {
+                // 记录错误日志，或提供一个默认值
+                println("PreferencesImpl , readTargetCurrencyCode Unknown currency code: ${it}  "+ e )
+                CurrencyCode.USD // 或其他默认值
+            }
+        }
     }
 }
